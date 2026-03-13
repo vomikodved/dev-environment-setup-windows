@@ -470,6 +470,34 @@ C) Serena MCP:
 - Обновите "App Installer" в Microsoft Store
 - Или установите программы вручную с официальных сайтов
 
+### Claude Code не запускается / команда `claude` не найдена
+
+**2. Указание пути к Git Bash (если Git установлен в нестандартном месте)**
+
+Claude Code использует Git Bash внутри. Если Git установлен не в стандартную папку (например, на диск `F:`), терминал не сможет его найти. Укажите путь вручную:
+
+```powershell
+$env:CLAUDE_CODE_GIT_BASH_PATH = "F:\VPN\Git\bin\bash.exe"
+```
+
+> Замените путь на тот, где у вас реально лежит `bash.exe`. Чтобы найти его:
+> ```powershell
+> Get-ChildItem -Path "C:\", "D:\", "F:\" -Recurse -Filter "bash.exe" -ErrorAction SilentlyContinue | Select-Object FullName
+> ```
+
+**3. Добавление Claude Code в PATH**
+
+Если команда `claude` не найдена после установки, добавьте путь вручную:
+
+```powershell
+$env:PATH += ";$env:USERPROFILE\.local\bin"
+```
+
+> Для постоянного применения добавьте эту строку в профиль PowerShell:
+> ```powershell
+> Add-Content $PROFILE '$env:PATH += ";$env:USERPROFILE\.local\bin"'
+> ```
+
 ### Claude не авторизуется
 - Убедитесь, что VPN включен
 - Попробуйте `/login` в интерактивном режиме claude
