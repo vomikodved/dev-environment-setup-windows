@@ -261,6 +261,40 @@ claude mcp add serena -- uvx --from git+https://github.com/oraios/serena serena 
 claude mcp list | Select-String "serena"
 ```
 
+### D) Cartographer (карта кодовой базы)
+
+Cartographer создаёт полную карту проекта в файле `docs/CODEBASE_MAP.md`. При старте новой сессии Claude Code читает эту карту вместо того, чтобы заново обходить весь проект — это **значительно экономит токены** на больших кодовых базах.
+
+Репозиторий: https://github.com/kingbootoshi/cartographer
+
+Сначала установите `tiktoken`:
+
+```powershell
+pip install tiktoken
+```
+
+Установка — в интерактивном режиме Claude Code (`claude`):
+
+```
+/plugin marketplace add kingbootoshi/cartographer
+/plugin install cartographer
+```
+
+Использование:
+
+```
+/cartographer
+```
+
+> **Когда нужен:** для проектов с 20+ файлами. В маленьких проектах Claude и так быстро разбирается в структуре.
+
+Проверка:
+
+```powershell
+# После запуска /cartographer должен появиться файл:
+Test-Path docs\CODEBASE_MAP.md
+```
+
 ---
 
 ## 9. Superpowers Skills
@@ -322,6 +356,7 @@ Superpowers — набор скилов для улучшения работы C
    – Context7
    – Playwright
    – Serena (универсальный LSP)
+   – Cartographer (карта кодовой базы)
 10. Настроенные скилы из https://github.com/obra/superpowers
 ```
 
@@ -350,7 +385,7 @@ Superpowers — набор скилов для улучшения работы C
 - GitHub CLI (gh) — ТОЛЬКО установить, НЕ логинить в GitHub
 - Claude Code/CLI (claude)
 - Авторизация в Claude
-- MCP-плагины: Context7, Playwright, Serena
+- MCP-плагины: Context7, Playwright, Serena, Cartographer
 
 Правила:
 1) Сначала сделай диагностику и выведи краткий план (что уже есть / чего нет).
@@ -403,6 +438,13 @@ C) Serena MCP:
 - pip install uv
 - claude mcp add serena -- uvx --from git+https://github.com/oraios/serena serena start-mcp-server --context claude-code --project .
 
+D) Cartographer (карта кодовой базы — экономит токены при старте новых задач):
+- pip install tiktoken
+- В интерактивном режиме Claude:
+  /plugin marketplace add kingbootoshi/cartographer
+  /plugin install cartographer
+- Использование: /cartographer (для проектов с 20+ файлами)
+
 Проверь все плагины: claude mcp list
 
 ШАГ 6 — Промежуточный отчёт
@@ -444,6 +486,7 @@ C) Serena MCP:
    - Context7
    - Playwright
    - Serena
+   - Cartographer
 9. Superpowers Skills — установлены?
 
 Выведи итоговую таблицу со статусами.
