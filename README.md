@@ -200,22 +200,63 @@ claude
 
 ### Альтернатива: корпоративный прокси без VPN
 
-Если ваш GitHub-аккаунт состоит в организации `sputnik-systems` — можно подключить Claude Code к корпоративному прокси `cc.sputnik.systems` вместо использования VPN.
+Если ваш GitHub-аккаунт состоит в организации `sputnik-systems` — можно подключить Claude Code к корпоративному прокси `cc.sputnik.systems` вместо использования VPN и оплаченного Claude-аккаунта.
+
+### Порядок действий
+
+1. Открыть PowerShell
+2. Разрешить запуск скриптов (один раз):
 
 ```powershell
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+
+3. Запустить установщик:
+
+```powershell
 npx -p github:sputnik-asgardos/llm-proxy agsetup
 ```
 
-Установщик проведёт GitHub device-flow (откройте ссылку из вывода, введите код, подтвердите), пропишет прокси в `%USERPROFILE%\.claude\settings.json` и добавит `ag*` команды в PATH. **После этого перезапустите PowerShell.**
+4. В терминале появится короткий код (например `WDJB-MJHT`) и ссылка. Откройте ссылку, введите код, подтвердите.
+5. В конце установщик сам пробует модели и печатает:
 
-Проверка:
+```
+Default model: zai/glm-4.6
+Also available: zai/glm-5.1, mimo/mimo-v2-pro
+```
+
+Это значит, что прокси готов.
+
+6. **Перезапустите PowerShell** (чтобы PATH обновился)
+7. Проверьте:
 
 ```powershell
 agclaude -p "какую модель используешь"
 ```
 
-Ответ должен содержать `glm-5.1` или `mimo`. Полный гайд: [sputnik-asgardos/llm-proxy](https://github.com/sputnik-asgardos/llm-proxy/blob/main/docs/onboarding/claude-code-auth.md).
+Ответ должен содержать `glm-5.1` или `mimo` — прокси подключён.
+
+### Если не вышло
+
+**А)** `agclaude: command not found` после setup — не перезапустили PowerShell. Закройте и откройте заново.
+
+**Б)** Установщик падает с ошибкой про `node_modules\asgardos-llm-proxy` и «broken symlink» — это известный баг npm 10.9+/11.x. В свежем релизе (2026-04-22) починили. Если всё равно падает — напишите в [issue #13](https://github.com/sputnik-asgardos/llm-proxy/issues/13).
+
+**В)** В браузере на device-коде пишет `access denied` — ваш GitHub-аккаунт не в организации `sputnik-systems`. Напишите в команду, чтобы добавили.
+
+**Г)** После `agclaude` всё равно отвечает как обычный Claude — перезапустите `agsetup` (токен мог протухнуть).
+
+### Сменить модель
+
+После setup default-модель автоматически подставляется во все `ag*`-команды. Посмотреть, что доступно, и сменить:
+
+```powershell
+agmodels                              # таблица провайдеров и моделей
+agtest                                # проверить, какие модели живые
+agsetup --set-default mimo/mimo-v2-pro   # сменить default
+```
+
+Полный гайд: [sputnik-asgardos/llm-proxy](https://github.com/sputnik-asgardos/llm-proxy/blob/main/docs/onboarding/claude-code-auth.md).
 
 ---
 
