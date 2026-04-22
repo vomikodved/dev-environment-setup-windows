@@ -211,16 +211,7 @@ claude
    Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
    ```
 
-3. Скачать установщик. Два пути на выбор:
-
-   **Через браузер (проще):** открыть <https://asgardos.ai/platform/llm-proxy/>, пройти org-SSO, нажать «Скачать для Windows» — получится файл `setup.ps1`.
-
-   **Через GitHub CLI** (если уже есть `gh auth`):
-
-   ```powershell
-   gh api repos/sputnik-asgardos/llm-proxy/contents/setup.ps1 `
-     -H "Accept: application/vnd.github.raw" > setup.ps1
-   ```
+3. Скачать установщик: открыть в браузере <https://asgardos.ai/platform/llm-proxy/setup.ps1>. Браузер попросит войти через GitHub (нужен аккаунт в организации `sputnik-systems`) и после входа покажет текст скрипта. Сохрани страницу как файл `setup.ps1` (`Ctrl+S`).
 
 4. Запустить установщик:
 
@@ -243,13 +234,11 @@ claude
 
 **А)** `agclaude: command not found` после setup — не перезапустили PowerShell. Закройте и откройте заново. Если и после этого не находит — добавьте `%LOCALAPPDATA%\asgardos\bin` в PATH вручную.
 
-**Б)** `gh: command not found` — поставьте GitHub CLI (`winget install --id GitHub.cli`) и авторизуйтесь `gh auth login`, либо воспользуйтесь путём через браузер (см. пункт 3).
+**Б)** В браузере при входе или на device-коде пишет `access denied` — ваш GitHub-аккаунт не в организации `sputnik-systems`. Напишите в команду, чтобы добавили.
 
-**В)** В браузере на device-коде пишет `access denied` — ваш GitHub-аккаунт не в организации `sputnik-systems`. Напишите в команду, чтобы добавили.
+**В)** После `agclaude` всё равно отвечает как обычный Claude — запустите `pwsh -File setup.ps1` ещё раз (токен мог протухнуть, либо вы запускаете голый `claude` вместо `agclaude`).
 
-**Г)** После `agclaude` всё равно отвечает как обычный Claude — запустите `pwsh -File setup.ps1` ещё раз (токен мог протухнуть, либо вы запускаете голый `claude` вместо `agclaude`).
-
-**Д)** `401 unauthorized` — токен протух, повторно запустите `pwsh -File setup.ps1`.
+**Г)** `401 unauthorized` — токен протух, повторно запустите `pwsh -File setup.ps1`.
 
 ### Сменить модель
 
@@ -265,7 +254,7 @@ claude
 
 Список валидных моделей — в [`providers.json`](https://github.com/sputnik-asgardos/llm-proxy/blob/main/providers.json) репозитория прокси.
 
-Полный гайд: [sputnik-asgardos/llm-proxy](https://github.com/sputnik-asgardos/llm-proxy/blob/main/docs/onboarding/claude-code-auth.md).
+Полный гайд (ручной, без установщика): [sputnik-asgardos/llm-proxy](https://github.com/sputnik-asgardos/llm-proxy/blob/main/CLAUDE_CODE_SETUP.md).
 
 ---
 
