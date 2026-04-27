@@ -14,14 +14,16 @@
 4. [Node.js](#4-nodejs)
 5. [Git и GitHub CLI](#5-git-и-github-cli)
 6. [Claude Code](#6-claude-code)
-7. [Авторизация в Claude](#7-авторизация-в-claude)
-8. [MCP-плагины](#8-mcp-плагины)
-9. [Superpowers Skills](#9-superpowers-skills)
-10. [Проверка окружения](#10-проверка-окружения)
-11. [Автоматическая установка (промпты)](#11-автоматическая-установка-промпты)
-12. [Troubleshooting](#12-troubleshooting)
+7. [jq](#7-jq)
+8. [Авторизация в Claude](#8-авторизация-в-claude)
+9. [MCP-плагины](#9-mcp-плагины)
+10. [Superpowers Skills](#10-superpowers-skills)
+11. [Проверка окружения](#11-проверка-окружения)
+12. [Автоматическая установка (промпты)](#12-автоматическая-установка-промпты)
+13. [Troubleshooting](#13-troubleshooting)
 
 ---
+
 
 ## 1. Предварительные требования
 
@@ -170,7 +172,25 @@ claude --version
 
 ---
 
-## 7. Авторизация в Claude
+## 7. jq
+
+`jq` — утилита для работы с JSON, используется установщиком и обёртками (`agclaude`, `agopencode`).
+
+### Установка
+
+```powershell
+winget install jqlang.jq
+```
+
+### Проверка
+
+```powershell
+jq --version
+```
+
+---
+
+## 8. Авторизация в Claude
 
 ### Порядок действий
 
@@ -212,11 +232,6 @@ claude
    ```powershell
    Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
    ```
-   **Предварительно:** установите `jq`:
-   ```powershell
-   winget install jqlang.jq
-   ```
-
 
 3. Скачать установщик: перейти в папку, куда хотите положить скрипт, и открыть в браузере <https://asgardos.ai/platform/llm-proxy/setup.ps1>. Браузер попросит войти через GitHub (нужен аккаунт в одной из организаций — `sputnik-systems` или `sputnik-asgardos`) — после входа файл скачается автоматически. Переложите `setup.ps1` из папки Загрузки в нужную директорию.
 
@@ -291,7 +306,7 @@ Unblock-File .\setup.ps1
 
 ---
 
-## 8. MCP-плагины
+## 9. MCP-плагины
 
 MCP-плагины расширяют возможности Claude Code.
 
@@ -388,7 +403,7 @@ Test-Path docs\CODEBASE_MAP.md
 
 ---
 
-## 9. Superpowers Skills
+## 10. Superpowers Skills
 
 Superpowers — набор скилов для улучшения работы Claude Code.
 
@@ -411,7 +426,7 @@ Superpowers — набор скилов для улучшения работы C
 
 ---
 
-## 10. Проверка окружения
+## 11. Проверка окружения
 
 ### Чек-лист
 
@@ -452,7 +467,7 @@ Superpowers — набор скилов для улучшения работы C
 
 ---
 
-## 11. Автоматическая установка (промпты)
+## 12. Автоматическая установка (промпты)
 
 Установка разделена на 2 этапа:
 - **Промпт 1** — для Cursor (установка всего до MCP-плагинов)
@@ -576,7 +591,7 @@ C) Serena MCP:
 
 ---
 
-## 12. Troubleshooting
+## 13. Troubleshooting
 
 ### VPN не работает
 - Проверьте, что VPN-клиент запущен и подключен
