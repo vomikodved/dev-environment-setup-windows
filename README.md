@@ -2,7 +2,7 @@
 
 Руководство по настройке окружения для работы с Claude Code + MCP + Superpowers на Windows 10/11.
 
-> **Версия для macOS:** [dev-environment-setup](https://github.com/Afanaseva/dev-environment-setup)
+> **Версия для macOS:** [dev-environment-setup](https://github.com/vomikodved/dev-environment-setup)
 
 ---
 
@@ -243,15 +243,19 @@ claude
    ```
 
 5. В терминале появится короткий код (например `WDJB-MJHT`) и ссылка. Откройте ссылку, введите код, подтвердите.
-6. Дождитесь строки `Готово. Попробуй: agclaude -p 'hi'`. Установщик положил `agclaude.cmd` / `agcodex.cmd` / `agopencode.cmd` в `%LOCALAPPDATA%\asgardos\bin` и записал токен + конфиг в `%APPDATA%\orchestra\` (default-модель `mimo/mimo-v2.5-pro`).
+6. Дождитесь строки `Готово. Попробуй: agclaude -p 'hi'`. Установщик положил `agclaude.cmd` / `agcodex.cmd` / `agopencode.cmd` / `agcrush.cmd` в `%LOCALAPPDATA%\asgardos\bin` и записал токен + конфиг в `%APPDATA%\orchestra\` (default-модель `kimi/kimi-for-coding`).
 7. **Перезапустите PowerShell** — чтобы PATH обновился.
 8. Проверьте:
 
    ```powershell
-   agclaude -p "какую модель используешь"
+   agclaude --proxy on    # включить прокси
+agclaude --proxy off   # отключить (прямой Claude)
+agclaude --proxy status
+
+agclaude -p "какую модель используешь"
    ```
 
-Ответ должен содержать `mimo` или `glm` — прокси подключён.
+Ответ должен содержать `kimi` или `deepseek` — прокси подключён.
 
 > **`claude` тоже работает напрямую** — установщик настраивает `~/.claude/settings.json` с `apiKeyHelper` и `ANTHROPIC_BASE_URL`. Можно писать `claude -p "..."` вместо `agclaude -p "..."`. Токен обновляется автоматически при протухании.
 
@@ -272,24 +276,26 @@ claude
 После setup default-модель автоматически подставляется во все `ag*`-команды. Сменить командой:
 
 ```powershell
-agclaude --set-model mimo/mimo-v2-pro
+agclaude --set-model kimi/kimi-for-coding
 ```
 
 Или через классы — они автоматически выбирают лучшую доступную модель:
 
 ```powershell
-agclaude --set-model strong      # GLM-5.1 / MiMo-v2-pro (рекомендуется для кода)
-agclaude --set-model strongest   # MiMo-v2.5-pro / GLM-5.1
-agclaude --set-model fast        # GLM-5-turbo / MiMo-v2-omni
+agclaude --set-model strong      # Kimi-for-coding / DeepSeek-v4-flash (recommended)
+agclaude --set-model strongest   # DeepSeek-v4-pro / Kimi-for-coding (premium)
+agclaude --set-model fast        # GLM-5-turbo / MiMo-v2-omni (cheap, quick)
 ```
 
 Или разово без сохранения:
 
 ```powershell
-agclaude --model mimo/mimo-v2-pro -p "ваш промпт"
+agclaude --model kimi/kimi-for-coding -p "ваш промпт"
 ```
 
-Доступные модели: `zai/glm-5.1`, `zai/glm-5-turbo`, `zai/glm-4.7`, `mimo/mimo-v2.5-pro`, `mimo/mimo-v2-pro`, `mimo/mimo-v2-omni`.
+Посмотреть актуальный список: `agclaude --list-models` (динамически с прокси).
+
+Доступные модели: `kimi/kimi-for-coding`, `deepseek/deepseek-v4-pro`, `deepseek/deepseek-v4-flash`, `zai/glm-5.1`, `zai/glm-5-turbo`, `mimo/mimo-v2.5-pro`, `mimo/mimo-v2-pro`, `mimo/mimo-v2-omni`.
 
 Полный гайд (ручной, без установщика): [sputnik-asgardos/llm-proxy](https://github.com/sputnik-asgardos/llm-proxy/blob/main/CLAUDE_CODE_SETUP.md).
 
@@ -302,7 +308,7 @@ Unblock-File .\setup.ps1
 .\setup.ps1 -Uninstall
 ```
 
-Скрипт удалит: обёртки `agclaude`/`agcodex`/`agopencode`, токен и конфиг, запись из PATH, остатки старых npm-пакетов.
+Скрипт удалит: обёртки `agclaude`/`agcodex`/`agopencode`/`agcrush`, токен и конфиг, запись из PATH, остатки старых npm-пакетов.
 
 ---
 
@@ -681,4 +687,4 @@ npm config set prefix "$env:APPDATA\npm"
 ## Версия для macOS
 
 Если вам нужна инструкция для macOS, перейдите в репозиторий:
-https://github.com/Afanaseva/dev-environment-setup
+https://github.com/vomikodved/dev-environment-setup
