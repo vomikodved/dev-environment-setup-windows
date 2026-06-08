@@ -1,6 +1,6 @@
 # Dev Environment Setup (Windows)
 
-Руководство по настройке окружения для работы с Claude Code + MCP + Superpowers на Windows 10/11.
+Руководство по настройке окружения для работы с Claude Code + Codex + MCP + Superpowers на Windows 10/11.
 
 > **Версия для macOS:** [dev-environment-setup](https://github.com/vomikodved/dev-environment-setup)
 
@@ -14,13 +14,14 @@
 4. [Node.js](#4-nodejs)
 5. [Git и GitHub CLI](#5-git-и-github-cli)
 6. [Claude Code](#6-claude-code)
-7. [jq](#7-jq)
-8. [Авторизация в Claude](#8-авторизация-в-claude)
-9. [MCP-плагины](#9-mcp-плагины)
-10. [Superpowers Skills](#10-superpowers-skills)
-11. [Проверка окружения](#11-проверка-окружения)
-12. [Автоматическая установка (промпты)](#12-автоматическая-установка-промпты)
-13. [Troubleshooting](#13-troubleshooting)
+7. [Codex CLI](#7-codex-cli)
+8. [jq](#8-jq)
+9. [Авторизация и корпоративный прокси](#9-авторизация-и-корпоративный-прокси)
+10. [MCP-плагины](#10-mcp-плагины)
+11. [Superpowers Skills](#11-superpowers-skills)
+12. [Проверка окружения](#12-проверка-окружения)
+13. [Автоматическая установка (промпты)](#13-автоматическая-установка-промпты)
+14. [Troubleshooting](#14-troubleshooting)
 
 ---
 
@@ -172,9 +173,39 @@ claude --version
 
 ---
 
-## 7. jq
+## 7. Codex CLI
 
-`jq` — утилита для работы с JSON, используется установщиком и обёртками (`agclaude`, `agopencode`).
+Codex — второй основной CLI для работы через корпоративный LLM-прокси. Уровень поддержки такой же: установщик настраивает отдельную команду `agcodex`, токен и модели.
+
+### Установка
+
+Отдельный OpenAI API key не нужен. Достаточно корпоративного установщика из раздела [Авторизация и корпоративный прокси](#9-авторизация-и-корпоративный-прокси): он кладёт `agcodex.cmd` рядом с `agclaude.cmd` в `%LOCALAPPDATA%\asgardos\bin`.
+
+Если нужен обычный `codex` без прокси — устанавливайте его отдельно по документации OpenAI. Для рабочего прокси-сценария используйте именно `agcodex`.
+
+### Проверка
+
+После запуска установщика и перезапуска PowerShell:
+
+```powershell
+agcodex --version
+agcodex exec "ответь одним словом: ok"
+```
+
+Если команда отвечает — Codex через прокси настроен.
+
+### Сменить модель
+
+```powershell
+agcodex --list-models
+agcodex --set-model gpt-5.5
+```
+
+---
+
+## 8. jq
+
+`jq` — утилита для работы с JSON, используется установщиком и обёртками (`agclaude`, `agcodex`, `agopencode`).
 
 ### Установка
 
@@ -190,138 +221,135 @@ jq --version
 
 ---
 
-## 8. Авторизация в Claude
+## 9. Авторизация и корпоративный прокси
 
-### Порядок действий
+Есть два рабочих варианта:
 
-0. **Включить VPN** — это обязательно!
-1. Открыть Cursor
-2. **ЗАКРЫТЬ окно диалога с Cursor (панель справа) — насовсем**
-3. Открыть терминал в Cursor (`Ctrl + `` `)
-4. Ввести команду:
+- **Личный Claude-аккаунт + VPN** — только для Claude Code.
+- **Корпоративный LLM-прокси** — рекомендуемый вариант для Claude Code **и** Codex. VPN и отдельные Claude/OpenAI API keys не нужны; нужен GitHub-аккаунт в `sputnik-systems` или `sputnik-asgardos`.
+
+### Вариант A: Claude Code с личным аккаунтом
+
+0. **Включить VPN** — это обязательно.
+1. Открыть Cursor.
+2. **ЗАКРЫТЬ окно диалога с Cursor (панель справа) — насовсем**.
+3. Открыть терминал в Cursor (`Ctrl + `` `).
+4. Запустить:
 
 ```powershell
 claude
 ```
 
-5. Claude спросит, есть ли у вас оплаченный аккаунт — выберите вариант **1** (Yes)
-6. Откроется браузер для авторизации — войдите в свой аккаунт
-7. Вернитесь в терминал — если видите приветствие с оранжевым рисунком, всё OK!
+5. Claude спросит, есть ли оплаченный аккаунт — выберите вариант **1** (Yes).
+6. Откроется браузер для авторизации — войдите в аккаунт.
+7. Вернитесь в терминал — если видите приветствие с оранжевым рисунком, всё OK.
 
-### Если не вышло
-
-**А)** Убедитесь, что VPN включен и работает
-
-**Б)** Если требует залогиниться заново:
+Если требует залогиниться заново:
 
 ```
 /login
 ```
 
-### Альтернатива: корпоративный прокси без VPN
+### Вариант B: корпоративный прокси для Claude Code и Codex
 
-Если у вас есть аккаунт на GitHub и он входит в одну из двух организаций — [sputnik-systems](https://github.com/sputnik-systems) или [sputnik-asgardos](https://github.com/sputnik-asgardos) — можно подключить Claude Code к корпоративному прокси `cc.sputnik.systems` вместо использования VPN и оплаченного Claude-аккаунта.
+Если у вас есть GitHub-аккаунт в [sputnik-systems](https://github.com/sputnik-systems) или [sputnik-asgardos](https://github.com/sputnik-asgardos), можно подключить оба CLI к корпоративному прокси `cc.sputnik.systems`.
 
-> **Как понять, зарегистрированы ли вы на GitHub?** Откройте <https://github.com/login>. Если сможете войти под своим логином и паролем — у вас есть аккаунт. Если логина нет — зарегистрируйтесь на <https://github.com/join>, а затем попросите в команде добавить вас в `sputnik-systems` или `sputnik-asgardos`. Проверить членство в организации заранее не обязательно — установщик ниже всё подскажет сам.
+> **Как понять, зарегистрированы ли вы на GitHub?** Откройте <https://github.com/login>. Если сможете войти под своим логином и паролем — у вас есть аккаунт. Если логина нет — зарегистрируйтесь на <https://github.com/join>, а затем попросите в команде добавить вас в `sputnik-systems` или `sputnik-asgardos`.
 
-### Порядок действий
+#### Установка прокси-клиента
 
-1. Открыть PowerShell
+1. Открыть PowerShell.
 2. Разрешить запуск скриптов (один раз):
 
    ```powershell
    Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
    ```
 
-3. Скачать установщик: перейти в папку, куда хотите положить скрипт, и открыть в браузере <https://bifrost.asgardos.ai:37620/platform/llm-proxy/setup.ps1>. Браузер попросит войти через GitHub (нужен аккаунт в одной из организаций — `sputnik-systems` или `sputnik-asgardos`) — после входа файл скачается автоматически. Переложите `setup.ps1` из папки Загрузки в нужную директорию.
-
-4. Разблокировать скачанный файл (Windows помечает файлы из интернета) и запустить установщик:
+3. Скачать установщик: открыть в браузере <https://bifrost.asgardos.ai:37620/platform/llm-proxy/setup.ps1>. Браузер попросит войти через GitHub и после входа скачает файл `setup.ps1`.
+4. Разблокировать и запустить:
 
    ```powershell
    Unblock-File .\setup.ps1
    .\setup.ps1
    ```
 
-5. В терминале появится короткий код (например `WDJB-MJHT`) и ссылка. Откройте ссылку, введите код, подтвердите.
-6. Дождитесь строки `Готово. Попробуй: agclaude -p 'hi'`. Установщик положил `agclaude.cmd` / `agcodex.cmd` / `agopencode.cmd` / `agcrush.cmd` в `%LOCALAPPDATA%\asgardos\bin` и записал токен + конфиг в `%APPDATA%\orchestra\` (default-модель `kimi/kimi-for-coding`).
+5. В терминале появится короткий код и ссылка. Откройте ссылку, введите код, подтвердите.
+6. Дождитесь строки `Готово. Попробуй: agclaude -p 'hi'`.
 7. **Перезапустите PowerShell** — чтобы PATH обновился.
-8. Проверьте Claude Code через прокси:
 
-   ```powershell
-   agclaude --proxy on    # включить прокси
-   agclaude --proxy off   # отключить (прямой Claude)
-   agclaude --proxy status
+Установщик настраивает сразу оба основных CLI:
 
-   agclaude -p "какую модель используешь"
-   ```
+| CLI | Команда | Для чего |
+|---|---|---|
+| Claude Code | `agclaude` | Claude Code через корпоративный прокси |
+| Codex | `agcodex` | OpenAI Codex CLI через корпоративный прокси |
 
-   Ответ должен содержать `kimi`, `deepseek`, `zai/glm` или другую модель прокси — значит Claude Code подключён.
+Также ставятся `agopencode` / `agcrush`, токен и конфиг в `%APPDATA%\orchestra\`, а настройки Claude Code — в `~/.claude/settings.json`.
 
-9. Проверьте Codex через тот же прокси:
+#### Проверка Claude Code
 
-   ```powershell
-   agcodex --version
-   agcodex exec "ответь одним словом: ok"
-   ```
+```powershell
+agclaude --proxy on
+agclaude --proxy status
+agclaude -p "какую модель используешь"
+```
 
-   `agcodex` — это обёртка для OpenAI Codex CLI. Она использует тот же GitHub-токен и корпоративный LLM-прокси, поэтому отдельный OpenAI-аккаунт/API key не нужен. Модель для Codex выбирается прокси автоматически; если нужно сменить — используйте `agcodex --set-model <model>` или `agcodex --list-models`.
+Ответ должен содержать `kimi`, `deepseek`, `zai/glm` или другую модель прокси.
 
-> **`claude` тоже работает напрямую** — установщик настраивает `~/.claude/settings.json` с `apiKeyHelper` и `ANTHROPIC_BASE_URL`. Можно писать `claude -p "..."` вместо `agclaude -p "..."`. Токен обновляется автоматически при протухании.
+#### Проверка Codex
+
+```powershell
+agcodex --version
+agcodex exec "ответь одним словом: ok"
+```
+
+Если команда отвечает — Codex тоже идёт через корпоративный прокси. Отдельный OpenAI-аккаунт/API key не нужен.
+
+#### Смена моделей
+
+Claude Code:
+
+```powershell
+agclaude --list-models
+agclaude --set-model strong
+agclaude --model kimi/kimi-for-coding -p "ваш промпт"
+```
+
+Codex:
+
+```powershell
+agcodex --list-models
+agcodex --set-model gpt-5.5
+```
+
+Классы моделей: `strongest`, `strong`, `fast`. Актуальный список всегда смотрите через `--list-models`.
+
+> **`claude` тоже работает напрямую через прокси** — установщик настраивает `~/.claude/settings.json` с `apiKeyHelper` и `ANTHROPIC_BASE_URL`. Можно писать `claude -p "..."` вместо `agclaude -p "..."`. Для Codex используйте `agcodex`.
 
 ### Если не вышло
 
 **А)** `agclaude: command not found` или `agcodex: command not found` после setup — не перезапустили PowerShell. Закройте и откройте заново. Если и после этого не находит — добавьте `%LOCALAPPDATA%\asgardos\bin` в PATH вручную.
 
-**Б)** В браузере при входе или на device-коде пишет `access denied` — ваш GitHub-аккаунт не входит ни в `sputnik-systems`, ни в `sputnik-asgardos`. Напишите в команду, чтобы добавили в одну из них.
+**Б)** В браузере при входе или на device-коде пишет `access denied` — GitHub-аккаунт не входит ни в `sputnik-systems`, ни в `sputnik-asgardos`. Напишите в команду, чтобы добавили в одну из них.
 
-**В)** После `agclaude` всё равно отвечает как обычный Claude — запустите `.\setup.ps1` ещё раз (токен мог протухнуть, либо вы запускаете голый `claude` вместо `agclaude`). Для Codex используйте именно `agcodex`, а не обычный `codex`.
+**В)** После `agclaude` всё равно отвечает как обычный Claude — запустите `.\setup.ps1` ещё раз. Для Codex используйте именно `agcodex`, а не обычный `codex`.
 
-**Г)** `401 unauthorized` — токен протух, повторно запустите `.\setup.ps1`. Если apiKeyHelper настроен (по умолчанию после setup), токен обновится автоматически.
+**Г)** `401 unauthorized` — токен протух, повторно запустите `.\setup.ps1`. Если apiKeyHelper настроен, токен обновится автоматически.
 
-**Д)** `apiKeyHelper` не срабатывает — если у вас выставлена переменная окружения `ANTHROPIC_AUTH_TOKEN`, она имеет приоритет над apiKeyHelper. Уберите её из системного окружения.
-
-### Сменить модель
-
-После setup default-модель автоматически подставляется во все `ag*`-команды. Сменить командой:
-
-```powershell
-agclaude --set-model kimi/kimi-for-coding
-```
-
-Или через классы — они автоматически выбирают лучшую доступную модель:
-
-```powershell
-agclaude --set-model strong      # Kimi-for-coding / DeepSeek-v4-flash (recommended)
-agclaude --set-model strongest   # DeepSeek-v4-pro / Kimi-for-coding (premium)
-agclaude --set-model fast        # GLM-5-turbo / MiMo-v2-omni (cheap, quick)
-```
-
-Или разово без сохранения:
-
-```powershell
-agclaude --model kimi/kimi-for-coding -p "ваш промпт"
-```
-
-Посмотреть актуальный список: `agclaude --list-models` (динамически с прокси).
-
-Доступные модели: `kimi/kimi-for-coding`, `deepseek/deepseek-v4-pro`, `deepseek/deepseek-v4-flash`, `zai/glm-5.1`, `zai/glm-5-turbo`, `mimo/mimo-v2.5-pro`, `mimo/mimo-v2-pro`, `mimo/mimo-v2-omni`.
-
-Полный гайд (ручной, без установщика): [sputnik-asgardos/llm-proxy](https://github.com/sputnik-asgardos/llm-proxy/blob/main/CLAUDE_CODE_SETUP.md).
+**Д)** `apiKeyHelper` не срабатывает — если выставлена переменная окружения `ANTHROPIC_AUTH_TOKEN`, она имеет приоритет над apiKeyHelper. Уберите её из системного окружения.
 
 ### Удалить прокси-клиент
-
-Запустите установщик с флагом `-Uninstall`:
 
 ```powershell
 Unblock-File .\setup.ps1
 .\setup.ps1 -Uninstall
 ```
 
-Скрипт удалит: обёртки `agclaude`/`agcodex`/`agopencode`/`agcrush`, токен и конфиг, запись из PATH, остатки старых npm-пакетов.
+Скрипт удалит обёртки `agclaude`/`agcodex`/`agopencode`/`agcrush`, токен и конфиг, запись из PATH, остатки старых npm-пакетов.
 
 ---
 
-## 9. MCP-плагины
+## 10. MCP-плагины
 
 MCP-плагины расширяют возможности Claude Code.
 
@@ -418,7 +446,7 @@ Test-Path docs\CODEBASE_MAP.md
 
 ---
 
-## 10. Superpowers Skills
+## 11. Superpowers Skills
 
 Superpowers — набор скилов для улучшения работы Claude Code.
 
@@ -441,7 +469,7 @@ Superpowers — набор скилов для улучшения работы C
 
 ---
 
-## 11. Проверка окружения
+## 12. Проверка окружения
 
 ### Чек-лист
 
@@ -483,7 +511,7 @@ Superpowers — набор скилов для улучшения работы C
 
 ---
 
-## 12. Автоматическая установка (промпты)
+## 13. Автоматическая установка (промпты)
 
 Установка разделена на 2 этапа:
 - **Промпт 1** — для Cursor (установка всего до MCP-плагинов)
@@ -609,7 +637,7 @@ C) Serena MCP:
 
 ---
 
-## 13. Troubleshooting
+## 14. Troubleshooting
 
 ### VPN не работает
 - Проверьте, что VPN-клиент запущен и подключен
