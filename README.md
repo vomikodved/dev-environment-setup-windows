@@ -189,7 +189,7 @@ Codex — второй основной CLI для работы через ко�
 
 ```powershell
 agcodex --version
-agcodex --list-models
+agcodex exec "ответь одним словом: ok"
 ```
 
 Если команда отвечает — Codex через прокси настроен.
@@ -300,7 +300,7 @@ agclaude -p "какую модель используешь"
 
 ```powershell
 agcodex --version
-agcodex --list-models
+agcodex exec "ответь одним словом: ok"
 ```
 
 Если команда отвечает — Codex тоже идёт через корпоративный прокси. Отдельный OpenAI-аккаунт/API key не нужен.
